@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Toutes mes voitures{% endblock %}
+
+{% block body %}
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Nom</th>
+            <th scope="col">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for car in cars %}
+            <tr>
+                <td scope="row">{{ car.id }}</td>
+                <td scope="row">{{ car.name }}</td>
+                <td scope="row">
+                   <a class="btn btn-primary" href="{{ path('app_car_show', {'id': car.id}) }}">Détail</a>
+                    <a class="btn btn-primary" href="{{ path('app_car_edit', {'id': car.id}) }}">Modifier</a>
+                    <a class="btn btn-primary" href="{{ path('app_car_delete', {'id': car.id}) }}">Supprimer</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<a class="btn btn-primary" href="/car/create">Ajouter une voiture</a>
+{% endblock %}
