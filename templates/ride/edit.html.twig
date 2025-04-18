@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Trajet{% endblock %}
+
+{% block body %}
+
+<h1>Modification d'un trajet</h1>
+{# {{ form(formview)}} #}
+{{form_start(formview,{attr:{'nonvalidate':'nonvalidate'}})}}
+{{form_row(formview.whereFrom)}}
+{{form_row(formview.whereTo)}}
+<button type="submit" class="btn btn-primary">Enregistrer</button>
+{{form_end(formview)}}
+
+{# <a class="btn btn-primary" href="{{ path('marque_index') }}">Retour à la liste</a> #}
+{% endblock %}

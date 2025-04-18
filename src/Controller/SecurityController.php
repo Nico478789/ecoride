@@ -34,9 +34,14 @@ class SecurityController extends AbstractController
     #[Route('/me', name: 'me', methods: 'GET')]
     public function me(): Response
     {
+        $user = $this->getUser();
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
 
+        // dd($user);
         return $this->render('security/me.html.twig', [
-            'user' => $this->getUser(),
+            'user' => $user,
         ]);
     }
 }

@@ -42,9 +42,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Car::class, mappedBy: 'driver', orphanRemoval: true)]
     private Collection $cars;
 
+    /**
+     * @var Collection<int, Ride>
+     */
+    #[ORM\ManyToMany(targetEntity: Ride::class, mappedBy: 'passenger')]
+    private Collection $rides;
+
     public function __construct()
     {
         $this->cars = new ArrayCollection();
+        $this->rides = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -146,6 +153,33 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             if ($car->getDriver() === $this) {
                 $car->setDriver(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Ride>
+     */
+    public function getRides(): Collection
+    {
+        return $this->rides;
+    }
+
+    public function addRide(Ride $ride): static
+    {
+        if (!$this->rides->contains($ride)) {
+            $this->rides->add($ride);
+            $ride->addPassenger($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRide(Ride $ride): static
+    {
+        if ($this->rides->removeElement($ride)) {
+            $ride->removePassenger($this);
         }
 
         return $this;

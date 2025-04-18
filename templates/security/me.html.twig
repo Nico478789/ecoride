@@ -8,5 +8,42 @@
 <h2>Mes informations</h2>
     <p>Voici les informations de votre compte :</p>
     <p>mail : {{ user.email }}</p>
+    <p>identifiant : {{ user.id }}</p>
+    Voitures :
+    <table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">id</th>
+            <th scope="col">nom</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for car in user.cars %}
+            <tr>
+                <td scope="row">{{ car.id }}</td>
+                <td scope="row">{{ car.name }}</td>
+            </tr>
+        {% endfor %}
+         </tbody>
+</table>
+ Trajets :
+    <table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">id</th>
+            <th scope="col">origine</th>
+            <th scope="col">destination</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for ride in user.rides %}
+            <tr>
+                <td scope="row">{{ ride.id }}</td>
+                <td scope="row">{{ ride.whereFrom }}</td>
+                <td scope="row">{{ ride.whereTo }}</td>
+            </tr>
+        {% endfor %}
+            </tbody>
+    </table>
 </div>
 {% endblock %}

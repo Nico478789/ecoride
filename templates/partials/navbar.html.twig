@@ -1,0 +1,39 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-primary">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">
+            <img src="{{asset("./assets/Pictures/logo EcoRide.png")}}" style="max-width: 100px" alt="logo Ecoride" />
+          </a>
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav"
+            aria-controls="navbarNav"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+              <li class="nav-item">
+                <a class="nav-link" href="/">Accueil</a>
+              </li>
+              <li class="nav-item" data-show="disconnected">
+                <a class="nav-link" href="/login">Connexion</a>
+              </li>
+              <li class="nav-item" data-show="connected">
+                <button class="nav-link" href="/login" id="sign_out_btn">
+                  Déconnexion
+                </button>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/rides">Covoiturages</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Contact</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>

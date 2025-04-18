@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Trajet{% endblock %}
+
+{% block body %}
+<div class="text-primary">
+    <h1>Trajet</h1>
+    <p>Voici le trajet :</p>
+    <p>{{ ride.whereFrom }}</p>
+    <p>{{ ride.whereTo }}</p>
+</div>
+{% endblock %}
