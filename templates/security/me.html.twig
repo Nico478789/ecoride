@@ -3,36 +3,45 @@
 {% block title %}Mon compte{% endblock %}
 
 {% block body %}
-<div class="text-primary">
-    <h1>Mon compte</h1>
-<h2>Mes informations</h2>
-    <p>Voici les informations de votre compte :</p>
-    <p>mail : {{ user.email }}</p>
-    <p>identifiant : {{ user.id }}</p>
-    Voitures :
-    <table class="table table-striped">
-    <thead>
-        <tr>
-            <th scope="col">id</th>
-            <th scope="col">nom</th>
-        </tr>
-    </thead>
-    <tbody>
+    
+<div class="mb-3">
+    <h1 class="text-center text-white">Mon compte</h1>
+    <h2 class="text-center text-white">Bienvenue {{ user.nickname }}, votre crédit est de {{user.credits}}</h2>
+</div>
+
+<div class="row">
+
+<div class="col-12 col-lg-6">
+    {{form_start(formview,{attr:{'class':'text-white p-3'}})}}
+    {{form_row(formview.nickname)}}
+    {{form_row(formview.phone_number)}}
+    <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
+{{form_end(formview)}}
+</div>
+
+ <div class="p-5 col-12 col-lg-6 ">  
+    <h2 class="text-white">Mes voitures :</h2>
+    
     {% for car in user.cars %}
-            <tr>
-                <td scope="row">{{ car.id }}</td>
-                <td scope="row">{{ car.name }}</td>
-            </tr>
-        {% endfor %}
-         </tbody>
-</table>
- Trajets :
+            <a href="{{ path('app_car_edit', {'id': car.id}) }}" class="text-white">{{ loop.index }} : {{ car.BrandName }} {{ car.ModelName }}</a>
+            <br>
+    {% endfor %}
+         
+<a href="{{ path('app_car_create') }}" class="mt-3 btn btn-primary">Ajouter une voiture</a>
+<a href="{{ path('app_ride_create') }}" class="mt-3 btn btn-primary"><img src="{{ asset ("./assets/Pictures/taxi-front-fill.svg")}}" alt="Taxi icon"> Proposer un covoiturage</a>
+</div>
+</div>
+
+  <h2 class="text-white">Mes trajets :</h2>
     <table class="table table-striped">
     <thead>
         <tr>
             <th scope="col">id</th>
             <th scope="col">origine</th>
             <th scope="col">destination</th>
+            <th scope="col">Heure de départ</th>
+            <th scope="col">Nombre de passagers</th>
+            <th scope="col">statut</th>
         </tr>
     </thead>
     <tbody>
@@ -41,9 +50,14 @@
                 <td scope="row">{{ ride.id }}</td>
                 <td scope="row">{{ ride.whereFrom }}</td>
                 <td scope="row">{{ ride.whereTo }}</td>
+                <td scope="row">{{ ride.DepartureTime|date('d/m/Y H:i') }}</td>
+                <td scope="row">{{ ride.NumberOfSeats }}</td>
+                <td scope="row">{{ ride.Status }}</td>
+
             </tr>
         {% endfor %}
             </tbody>
     </table>
-</div>
+    <a type="button" class="btn btn-danger" href="{{ path('me_delete') }}">Supprimer mon compte</a>
+
 {% endblock %}

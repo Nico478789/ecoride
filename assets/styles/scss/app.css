@@ -11970,28 +11970,24 @@ textarea.form-control-lg {
     display: none !important;
   }
 }
-html {
-  height: 100%;
-}
-
 body {
   background-color: #2b5953;
-  height: 100%;
 }
 
 main {
   background-color: #2b5953;
-  padding-bottom: 100px;
 }
 
-.footer {
-  padding: 15px;
-  position: fixed;
-  bottom: 0;
-  width: 100%;
+.content {
+  margin-top: 100px;
+  margin-bottom: 100px;
 }
 
 .img-fluid {
   max-width: 75px;
   height: auto;
+}
+
+h2, .h2 {
+  font-size: 1rem;
 }/*# sourceMappingURL=app.css.map */

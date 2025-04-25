@@ -22,30 +22,21 @@ final class RideController extends AbstractController
         if ($user) {
             $ride->addPassenger($user);
         }
+        $ride->setStatus('created');
+
         $form = $this->createForm(RideType::class, $ride);
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
             $em->persist($ride);
             $em->flush();
 
-            return $this->redirectToRoute('app_ride_list');
+            return $this->redirectToRoute('me');
         }
 
         return $this->render('ride/create.html.twig', [
             'formview' => $form->createView(),
         ]);
-    }
-
-    #[Route('/ride/{id}/join', name: 'app_ride_join', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
-    public function join(Ride $ride, EntityManagerInterface $em): Response
-    {
-        $user = $this->getUser();
-        if ($user) {
-            $ride->addPassenger($user);
-            $em->flush();
-        }
-
-        return $this->redirectToRoute('app_ride_list');
     }
 
     #[Route('/ride/{id}', name: 'app_ride_show', requirements: ['id' => '\d+'], methods: ['GET'])]
@@ -81,6 +72,7 @@ final class RideController extends AbstractController
         return $this->redirectToRoute('app_ride_list');
     }
 
+    // List all rides
     #[Route('/ride', name: 'app_ride_list', methods: ['GET'])]
     public function list(EntityManagerInterface $em,): Response
     {
@@ -91,5 +83,17 @@ final class RideController extends AbstractController
         return $this->render('ride/list.html.twig', [
             'rides' => $rides,
         ]);
+    }
+
+    #[Route('/ride/{id}/join', name: 'app_ride_join', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
+    public function join(Ride $ride, EntityManagerInterface $em): Response
+    {
+        $user = $this->getUser();
+        if ($user) {
+            $ride->addPassenger($user);
+            $em->flush();
+        }
+
+        return $this->redirectToRoute('app_ride_list');
     }
 }

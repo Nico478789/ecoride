@@ -26,8 +26,4 @@ return [
         'version' => '5.3.5',
         'type' => 'css',
     ],
-    //     'bootstrap-icons' => [
-    //         'path' => './vendor/twbs/bootstrap-icons/font/bootstrap-icons.min.css',
-    //         'type' => 'css',
-    //     ],
 ];

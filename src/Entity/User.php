@@ -48,6 +48,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToMany(targetEntity: Ride::class, mappedBy: 'passenger')]
     private Collection $rides;
 
+    #[ORM\Column(length: 32, nullable: true)]
+    private ?string $nickname = null;
+
+    #[ORM\Column]
+    private ?int $credits = null;
+
+    #[ORM\Column(length: 32, nullable: true)]
+    private ?string $phone_number = null;
+
     public function __construct()
     {
         $this->cars = new ArrayCollection();
@@ -181,6 +190,42 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         if ($this->rides->removeElement($ride)) {
             $ride->removePassenger($this);
         }
+
+        return $this;
+    }
+
+    public function getNickname(): ?string
+    {
+        return $this->nickname;
+    }
+
+    public function setNickname(?string $nickname): static
+    {
+        $this->nickname = $nickname;
+
+        return $this;
+    }
+
+    public function getCredits(): ?int
+    {
+        return $this->credits;
+    }
+
+    public function setCredits(int $credits): static
+    {
+        $this->credits = $credits;
+
+        return $this;
+    }
+
+    public function getPhoneNumber(): ?string
+    {
+        return $this->phone_number;
+    }
+
+    public function setPhoneNumber(?string $phone_number): static
+    {
+        $this->phone_number = $phone_number;
 
         return $this;
     }

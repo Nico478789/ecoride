@@ -7,18 +7,79 @@
         <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
         {% block stylesheets %}
         {% endblock %}
-
         {% block javascripts %}
             {% block importmap %}{{ importmap('app') }}{% endblock %}
         {% endblock %}
     </head>
-    <body class="d-flex flex-column justify-content-between min-vh-100">
+
+    <body>
     <header>
-      {% include 'partials/navbar.html.twig' %}
+      <nav class="navbar fixed-top navbar-expand-lg navbar-light bg-primary">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">
+            <img src="{{asset("./assets/Pictures/logo EcoRide.png")}}" style="max-width: 100px" alt="logo Ecoride" />
+          </a>
+          {% if app.user %}
+            <div class="mb-3">
+                You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>
+            </div>
+        {% endif %}
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav"
+            aria-controls="navbarNav"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+              <li class="nav-item">
+                <a class="nav-link" href="/">Accueil</a>
+              </li>
+              <li class="nav-item" data-show="disconnected">
+                <a class="nav-link" href="/login">Connexion</a>
+              </li>
+              <li class="nav-item" data-show="connected">
+                <a class="nav-link" href="{{ path('app_logout') }}">
+                  Déconnexion
+                </a>
+              </li>
+              <li class="nav-item" data-show="connected">
+                <a class="nav-link" href="{{ path('me') }}">
+                  Mon compte
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/rides">Covoiturages</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Contact</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
     </header>
-    <div class= "flex-grow-1">
+
+    <div class= "content">
         {% block body %}{% endblock %}
     </div>
-         {% include 'partials/footer.html.twig' %}
+    
+    <footer>
+         <footer class="container-fluid fixed-bottom bg-primary text-black text-center footer py-2">
+      <div class="row">
+        <div class="col-12 col-lg-6">
+          <p>Nous contacter : info@ecoride.fr</p>
+        </div>
+        <div class="col-12 col-lg-6">
+          <a href="#">Mentions légales</a>
+        </div>
+      </div>
+    </footer>
+    </footer>
     </body>
 </html>

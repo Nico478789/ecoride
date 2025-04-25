@@ -34,14 +34,6 @@ final class CarController extends AbstractController
         ]);
     }
 
-    #[Route('/car/{id}', name: 'app_car_show', requirements: ['id' => '\d+'], methods: ['GET'])]
-    public function show(Car $car): Response
-    {
-        return $this->render('car/car.html.twig', [
-            'car' => $car,
-        ]);
-    }
-
     #[Route('/car/{id}/edit', name: 'app_car_edit', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
     public function edit(Car $car, Request $request, EntityManagerInterface $em): Response
     {
