@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Tous mes trajets{% endblock %}
+{% block title %}Tous les trajets{% endblock %}
 
 {% block body %}
 <table class="table table-striped">
@@ -9,6 +9,8 @@
             <th scope="col">Origine</th>
             <th scope="col">Destination</th>
             <th scope="col">Organisateur</th>
+            <th scope="col">Départ</th>
+            <th scope="col">Voiture</th>
             <th scope="col">Actions</th>
         </tr>
     </thead>
@@ -18,17 +20,20 @@
             <tr>
                 <td scope="row">{{ ride.whereFrom }}</td>
                 <td scope="row">{{ ride.whereTo }}</td>
-                <td scope="row">{{ ride.email }}</td>
+                <td scope="row">{{ ride.nickname }}</td>
+                <td scope="row">{{ ride.departure_time|date('d/m/Y H:i') }}</td>
+                <td scope="row">{{ ride.brand_name }}</td>
                 
                 <td scope="row">
                    <a class="btn btn-primary" href="{{ path('app_ride_show', {'id': ride.id}) }}">Détail</a>
-                    <a class="btn btn-primary" href="{{ path('app_ride_edit', {'id': ride.id}) }}">Modifier</a>
-                    <a class="btn btn-primary" href="{{ path('app_ride_delete', {'id': ride.id}) }}">Supprimer</a>
+                    <a class="btn btn-primary" href="{{ path('app_ride_join', {'id': ride.id}) }}">Participer</a>
+                    <a class="btn btn-danger" href="{{ path('app_ride_edit', {'id': ride.id}) }}">Modifier</a>
+                    <a class="btn btn-danger" href="{{ path('app_ride_delete', {'id': ride.id}) }}">Supprimer</a>
                 </td>
             </tr>
            
         {% endfor %}
     </tbody>
 </table>
-<a class="btn btn-primary" href="/ride/create">Ajouter un trajet</a>
+
 {% endblock %}

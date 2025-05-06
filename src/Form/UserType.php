@@ -7,6 +7,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Vich\UploaderBundle\Form\Type\VichFileType;
 
 class UserType extends AbstractType
 {
@@ -19,8 +20,14 @@ class UserType extends AbstractType
             ->add('phone_number', TextType::class, [
                 'label' => 'Numéro de téléphone',
             ])
-
-        ;
+            ->add('imageFile', VichFileType::class, [
+                'required' => false,
+                'label' => 'Photo de profil',
+                'allow_delete' => true,
+                'delete_label' => 'Supprimer la photo',
+                'asset_helper' => false,
+                'download_uri' => false,
+            ]);;
     }
 
     public function configureOptions(OptionsResolver $resolver): void

@@ -1,12 +1,19 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Trajet{% endblock %}
+{% block title %}{{ ride.whereFrom }} - {{ ride.whereTo }}{% endblock %}
 
 {% block body %}
-<div class="text-primary">
-    <h1>Trajet</h1>
-    <p>Voici le trajet :</p>
-    <p>{{ ride.whereFrom }}</p>
-    <p>{{ ride.whereTo }}</p>
+<div class="text-centet text-white">
+    
+    <h1>{{ride.Car.Driver.nickname}} vous propose un {{ ride.whereFrom }} - {{ ride.whereTo }}</h1>
+    {% if ride.Car.Driver.imageName %}
+        <img src="{{ vich_uploader_asset(ride.Car.Driver, 'imageFile') }}" alt="image de profil" class="img-fluid rounded-circle ">
+    {% else %}
+        <img src="{{ asset ('./assets/Pictures/default_profile.png') }}" alt="image de profil" class="img-fluid rounded-circle ">
+    {% endif %}
+    <p>Départ : {{ ride.departureTime|date('d/m/Y H:i') }}</p>
+    <p>Arrivée estimée: {{ ride.arrivalTime|date('d/m/Y H:i') }}</p>
+    <p>Nombre de places disponibles : {{ availableSeats}} / {{ride.NumberOfSeats}}</p>
+    <p>Prix : {{ ride.price }} €</p>
 </div>
 {% endblock %}

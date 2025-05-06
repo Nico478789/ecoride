@@ -19,9 +19,7 @@ final class RideController extends AbstractController
     {
         $ride = new Ride();
         $user = $this->getUser();
-        if ($user) {
-            $ride->addPassenger($user);
-        }
+
         $ride->setStatus('created');
 
         $form = $this->createForm(RideType::class, $ride);
@@ -42,8 +40,13 @@ final class RideController extends AbstractController
     #[Route('/ride/{id}', name: 'app_ride_show', requirements: ['id' => '\d+'], methods: ['GET'])]
     public function show(Ride $ride): Response
     {
+        $seats = $ride->getNumberOfSeats();
+        $passengers = $ride->getPassenger();
+        $passengerCount = count($passengers);
+        $availableSeats = $seats - $passengerCount;
         return $this->render('ride/ride.html.twig', [
             'ride' => $ride,
+            'availableSeats' => $availableSeats,
         ]);
     }
 
@@ -77,7 +80,7 @@ final class RideController extends AbstractController
     public function list(EntityManagerInterface $em,): Response
     {
         // $rides = $em->getRepository(Ride::class)->findAll();
-        $query = $em->createQuery('SELECT r.id, r.whereTo, r.whereFrom, u.email FROM App\Entity\Ride r JOIN r.passenger u');
+        $query = $em->createQuery('SELECT r.id, r.whereTo, r.whereFrom, r.departure_time, u.nickname, c.brand_name FROM App\Entity\Ride r JOIN r.car c JOIN c.driver u');
         $rides = $query->getResult();
 
         return $this->render('ride/list.html.twig', [
@@ -85,7 +88,7 @@ final class RideController extends AbstractController
         ]);
     }
 
-    #[Route('/ride/{id}/join', name: 'app_ride_join', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
+    #[Route('/ride/{id}/join', name: 'app_ride_join', requirements: ['id' => '\d+'], methods: ['POST', 'GET'])]
     public function join(Ride $ride, EntityManagerInterface $em): Response
     {
         $user = $this->getUser();
@@ -94,6 +97,24 @@ final class RideController extends AbstractController
             $em->flush();
         }
 
-        return $this->redirectToRoute('app_ride_list');
+        return $this->redirectToRoute('me');
+    }
+
+    #[Route('/ride/{id}/go', name: 'app_ride_go', requirements: ['id' => '\d+'], methods: ['POST', 'GET'])]
+    public function leave(Ride $ride, EntityManagerInterface $em): Response
+    {
+        $ride->setStatus('on the way');
+        $em->flush();
+
+        return $this->redirectToRoute('me');
+    }
+
+    #[Route('/ride/{id}/arrived', name: 'app_ride_arrived', requirements: ['id' => '\d+'], methods: ['POST', 'GET'])]
+    public function arrive(Ride $ride, EntityManagerInterface $em): Response
+    {
+        $ride->setStatus('arrived');
+        $em->flush();
+
+        return $this->redirectToRoute('me');
     }
 }

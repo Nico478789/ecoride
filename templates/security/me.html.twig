@@ -7,12 +7,20 @@
 <div class="mb-3">
     <h1 class="text-center text-white">Mon compte</h1>
     <h2 class="text-center text-white">Bienvenue {{ user.nickname }}, votre crédit est de {{user.credits}}</h2>
+    <div class="text-center">
+        {% if user.imageName %}
+            <img src="{{ vich_uploader_asset(user, 'imageFile') }}" alt="image de profil" class="img-fluid rounded-circle ">
+        {% else %}
+            <img src="{{ asset ('./assets/Pictures/default_profile.png') }}" alt="image de profil" class="img-fluid rounded-circle ">
+        {% endif %}		
+    </div>
 </div>
 
 <div class="row">
 
 <div class="col-12 col-lg-6">
     {{form_start(formview,{attr:{'class':'text-white p-3'}})}}
+    {{form_row(formview.imageFile)}}
     {{form_row(formview.nickname)}}
     {{form_row(formview.phone_number)}}
     <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
@@ -20,6 +28,8 @@
 </div>
 
  <div class="p-5 col-12 col-lg-6 ">  
+
+
     <h2 class="text-white">Mes voitures :</h2>
     
     {% for car in user.cars %}
@@ -32,32 +42,73 @@
 </div>
 </div>
 
-  <h2 class="text-white">Mes trajets :</h2>
+  <h2 class="text-white">Mes trajets proposés :</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">id</th>
+                <th scope="col">origine</th>
+                <th scope="col">destination</th>
+                <th scope="col">Heure de départ</th>
+                <th scope="col">Nombre de passagers</th>
+                <th scope="col">statut</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for car in user.cars %}
+            {% for ride in car.rides %}
+                <tr>
+                    <td scope="row">{{ ride.id }}</td>
+                    <td scope="row">{{ ride.whereFrom }}</td>
+                    <td scope="row">{{ ride.whereTo }}</td>
+                    <td scope="row">{{ ride.DepartureTime|date('d/m/Y H:i') }}</td>
+                    <td scope="row">{{ ride.NumberOfSeats }}</td>
+                    <td scope="row">{{ ride.Status }}</td>
+                    <td scope="row">
+                    <a class="btn btn-primary" href="{{ path('app_ride_go', {'id':ride.id} )}}">Démarrer</a>
+                    <a class="btn btn-primary" href="{{ path('app_ride_arrived', {'id':ride.id} )}}">Arriver</a>
+                        
+                </tr>
+            {% endfor %}
+        {% endfor %}
+    </tbody>
+    </table>
+
+    <h2 class="text-white">Mes trajets passagers :</h2>
     <table class="table table-striped">
     <thead>
         <tr>
             <th scope="col">id</th>
-            <th scope="col">origine</th>
+            <th scope="col">Conducteur</th>
+            <th scope="col">Lieu de départ</th>
             <th scope="col">destination</th>
             <th scope="col">Heure de départ</th>
             <th scope="col">Nombre de passagers</th>
             <th scope="col">statut</th>
+            <th scope="col">Actions</th>
         </tr>
     </thead>
     <tbody>
         {% for ride in user.rides %}
-            <tr>
+           
+             <tr>
                 <td scope="row">{{ ride.id }}</td>
+                <td scope="row">{{ ride.Car.Driver.nickname }}</td>
                 <td scope="row">{{ ride.whereFrom }}</td>
                 <td scope="row">{{ ride.whereTo }}</td>
                 <td scope="row">{{ ride.DepartureTime|date('d/m/Y H:i') }}</td>
                 <td scope="row">{{ ride.NumberOfSeats }}</td>
                 <td scope="row">{{ ride.Status }}</td>
-
-            </tr>
+                <td scope="row">
+                <a class="btn btn-primary" href="{{ path('app_ride_go', {'id':ride.id} )}}">Démarrer</a>
+                <a class="btn btn-primary" href="{{ path('app_ride_arrived', {'id':ride.id} )}}">Arriver</a>        
+                </tr>
+        
         {% endfor %}
-            </tbody>
+        </tbody>
     </table>
+
     <a type="button" class="btn btn-danger" href="{{ path('me_delete') }}">Supprimer mon compte</a>
 
 {% endblock %}
