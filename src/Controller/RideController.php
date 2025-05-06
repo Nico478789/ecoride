@@ -10,6 +10,8 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Attribute\Route;
 
 final class RideController extends AbstractController
@@ -110,10 +112,17 @@ final class RideController extends AbstractController
     }
 
     #[Route('/ride/{id}/arrived', name: 'app_ride_arrived', requirements: ['id' => '\d+'], methods: ['POST', 'GET'])]
-    public function arrive(Ride $ride, EntityManagerInterface $em): Response
+    public function arrive(Ride $ride, EntityManagerInterface $em, MailerInterface $mailer): Response
     {
         $ride->setStatus('arrived');
         $em->flush();
+        // $email = (new Email())
+        //     ->from('didierdeschamps@example.com')
+        //     ->to('zinedine@example.com')
+        //     ->subject('Coupe du monde')
+        //     ->text('vous êtes invité à la prochaine coupe du monde');
+
+        // $mailer->send($email);
 
         return $this->redirectToRoute('me');
     }
