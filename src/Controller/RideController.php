@@ -3,10 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Ride;
-use App\Entity\User;
 use App\Form\RideType;
-use Doctrine\Common\Collections\ArrayCollection;
+use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,7 +20,6 @@ final class RideController extends AbstractController
     public function create(Request $request, EntityManagerInterface $em): Response
     {
         $ride = new Ride();
-        $user = $this->getUser();
 
         $ride->setStatus('created');
 
@@ -116,13 +115,31 @@ final class RideController extends AbstractController
     {
         $ride->setStatus('arrived');
         $em->flush();
-        // $email = (new Email())
-        //     ->from('didierdeschamps@example.com')
-        //     ->to('zinedine@example.com')
-        //     ->subject('Coupe du monde')
-        //     ->text('vous êtes invité à la prochaine coupe du monde');
+        $passengers = $ride->getPassenger();
+        foreach ($passengers as $passenger) {
+            $user = $em->getRepository(User::class)->find($passenger->getId());
+            $email = (new TemplatedEmail())
+                ->from('rides@ecoride.com')
+                ->to($user->getEmail())
+                ->subject('Vous êtes arrivé à destination')
+                ->htmlTemplate('mailing/arrived.html.twig')
+                ->context([
+                    'ride' => $ride,
+                    'user' => $user,
+                ]);
 
-        // $mailer->send($email);
+
+            $mailer->send($email);
+        }
+
+
+        return $this->redirectToRoute('me');
+    }
+    #[Route('/ride/{id}/done', name: 'app_ride_done', requirements: ['id' => '\d+'], methods: ['POST', 'GET'])]
+    public function confirm(Ride $ride, EntityManagerInterface $em): Response
+    {
+        $ride->setStatus('done');
+        $em->flush();
 
         return $this->redirectToRoute('me');
     }

@@ -4,7 +4,6 @@ namespace App\Form;
 
 use App\Entity\Car;
 use App\Entity\Ride;
-use App\Entity\user;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;

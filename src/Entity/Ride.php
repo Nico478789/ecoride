@@ -25,7 +25,7 @@ class Ride
     /**
      * @var Collection<int, user>
      */
-    #[ORM\ManyToMany(targetEntity: user::class, inversedBy: 'rides')]
+    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'rides')]
     private Collection $passenger;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
