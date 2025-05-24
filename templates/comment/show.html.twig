@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Tous les commentaire{% endblock %}
+
+{% block body %}
+
+{%for comment in comments %}
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">{{ comment.title }}</h5>
+            <p class="card-text">{{ comment.content }}</p>
+            <p class="card-text">Posté par {{ comment.userId }}</p>
+            <p class="card-text">Utilisateur : {{ comment.targetId }}</p>
+        </div>
+    </div>
+
+{% endfor %}
+
+{% endblock %}
