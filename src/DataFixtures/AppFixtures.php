@@ -17,7 +17,7 @@ class AppFixtures extends Fixture
         $manager->persist($user1);
 
         $car1 = new Car();
-        $car1->setName("Voiture 1");
+        $car1->setModelName("Voiture 1");
         $car1->setDriver($user1);
         $manager->persist($car1);
 

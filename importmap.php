@@ -35,4 +35,12 @@ return [
     'chart.js' => [
         'version' => '3.9.1',
     ],
+    'bootstrap-icons/font/bootstrap-icons.min.css' => [
+        'version' => '1.13.1',
+        'type' => 'css',
+    ],
+    'stars' => [
+        'path' => './assets/js/stars.js',
+        'entrypoint' => true,
+    ],
 ];

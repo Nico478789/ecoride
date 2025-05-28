@@ -3,31 +3,36 @@
 namespace App\Controller;
 
 use App\Document\Comment;
-use App\Entity\User;
 use Doctrine\ODM\MongoDB\DocumentManager;
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Form\CommentType;
 
 final class CommentController extends AbstractController
 {
     #[Route('/comment/create', name: 'app_comment_create', methods: ['GET', 'POST'])]
-    public function createAction(DocumentManager $dm, EntityManagerInterface $em)
+    public function createAction(Request $request, DocumentManager $dm)
     {
         $comment = new Comment();
         $user = $this->getUser();
-        $target = $em->getRepository(User::class)->findOneBy(['id' => 5]);
-        $comment->settitle('titre 2');
-        $comment->setcontent('encore du contenu');
-        $comment->setAuthor($user);
-        $comment->setTarget($target);
+        if ($user) {
+            $comment->setAuthor($user);
+        }
 
-        $dm->persist($comment);
-        $dm->flush();
+        $form = $this->createForm(CommentType::class, $comment);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $dm->persist($comment);
+            $dm->flush();
 
-        return new Response('Created comment id ' . $comment->getId());
+            return $this->redirectToRoute('app_comment_show');
+        }
+
+        return $this->render('comment/create.html.twig', [
+            'formview' => $form->createView(),
+        ]);
     }
 
     #[Route('/comment/show', name: 'app_comment_show', methods: ['GET'])]

@@ -13,10 +13,13 @@ class Comment
     private string $id;
 
     #[MongoDB\Field(type: 'string')]
-    private $title;
+    private $title = null;
 
     #[MongoDB\Field(type: 'string')]
     private $content;
+
+    #[MongoDB\Field(type: 'int')]
+    private ?int $grade = null;
 
     // This is a string field that will store the user's nickname as userId
     #[MongoDB\Field(type: 'string')]
@@ -47,7 +50,7 @@ class Comment
     {
         return $this->targetId;
     }
-    public function setTarget(User $target): void
+    public function setTargetId(User $target): void
     {
         $this->targetId = $target->getNickname();
         $this->target = $target;
@@ -63,7 +66,7 @@ class Comment
     {
         $this->title = $title;
     }
-    public function gettitle(): string
+    public function gettitle(): ?string
     {
         return $this->title;
     }
@@ -71,10 +74,20 @@ class Comment
     {
         $this->content = $content;
     }
-    public function getcontent(): string
+    public function getcontent(): ?string
     {
         return $this->content;
     }
+
+    public function setgrade(string $grade): void
+    {
+        $this->grade = $grade;
+    }
+    public function getgrade(): ?string
+    {
+        return $this->grade;
+    }
+
     public function getId(): string
     {
         return $this->id;
