@@ -3,6 +3,16 @@
 {% block title %}Tous les trajets{% endblock %}
 
 {% block body %}
+
+<h1 class="text-center text-white">Tous les trajets</h1>
+
+<!-- Filter form - check SearchType.php and RideController-->
+{% if formview is not defined %}
+    {% set formview = form %}
+{% endif %}
+
+{%include "./_search.html.twig"%}
+
 <table class="table table-striped">
     <thead>
         <tr>

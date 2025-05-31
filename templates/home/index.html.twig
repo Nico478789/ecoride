@@ -4,37 +4,8 @@
 
 {% block body %}
 <h1 class="text-white text-center mb-3">Bienvenue sur le site EcoRide</h1>
-<form class="row m-3">
-    <div class="col-12 col-md-4 mb-3">
-      <label for="origin" class="text-white form-label"
-        >D'où partez vous ?</label
-      >
-      <input type="text" class="form-control" id="origin" name="origin" />
-    </div>
-    <div class="col-12 col-md-4 mb-3">
-      <label for="destination" class="text-white form-label"
-        >Où allez-vous ?</label
-      >
-      <input
-        type="text"
-        class="form-control"
-        id="destination"
-        name="destination"
-      />
-    </div>
-    <div class="col-12 col-md-4 mb-3">
-      <label for="trip_date" class="text-white form-label"
-        >A quelle date ?</label
-      >
-      <input type="date" class="form-control" id="trip_date" name="trip_date" />
-    </div>
-    <div class="text-center">
-      <button class="btn btn-primary">
-        <i class="bi bi-taxi-front-fill"></i>
-        Voir les covoiturages
-      </button>
-    </div>
-  </form>
+
+{%include "./_search.html.twig"%}
 
 <div class="container">
     <div class="row">

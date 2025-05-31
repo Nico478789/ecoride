@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Ride;
 use App\Form\RideType;
 use App\Entity\User;
+use App\Form\SearchType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -76,16 +77,69 @@ final class RideController extends AbstractController
         return $this->redirectToRoute('app_ride_list');
     }
 
-    // List all rides
-    #[Route('/ride', name: 'app_ride_list', methods: ['GET'])]
-    public function list(EntityManagerInterface $em,): Response
+    // List all rides with filtering options
+    #[Route('/ride', name: 'app_ride_list', methods: ['GET', 'POST'])]
+    public function list(Request $request, Ride $ride, EntityManagerInterface $em): Response
     {
-        // $rides = $em->getRepository(Ride::class)->findAll();
-        $query = $em->createQuery('SELECT r.id, r.whereTo, r.whereFrom, r.departure_time, u.nickname, c.brand_name FROM App\Entity\Ride r JOIN r.car c JOIN c.driver u');
-        $rides = $query->getResult();
+        $form = $this->createForm(SearchType::class, $ride);
+        $form->handleRequest($request);
+        $departureCity = $request->get('departureCity');
+        $arrivalCity = $request->get('arrivalCity');
+        $departureDate = $request->get('departureDate');
+
+        // If the form FROM THIS PAGE is submitted and valid, filter the rides based on the form data
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $departureCity = $form->get('whereFrom')->getData();
+            $arrivalCity = $form->get('whereTo')->getData();
+            $departureDate = $form->get('DepartureTime')->getData();
+
+            $query = $em->createQueryBuilder()
+                ->select('r.id, r.whereTo, r.whereFrom, r.departure_time, u.nickname, c.brand_name')
+                ->from(Ride::class, 'r')
+                ->join('r.car', 'c')
+                ->join('c.driver', 'u')
+                ->where('r.whereFrom = :departureCity')
+                ->setParameter('departureCity', $departureCity)
+                ->andWhere('r.whereTo = :arrivalCity')
+                ->setParameter('arrivalCity', $arrivalCity)
+                ->andWhere('r.departure_time >= :departureDate')
+                ->setParameter('departureDate', $departureDate)
+                ->getQuery()
+                ->getResult();
+
+            return $this->render('ride/list.html.twig', [
+                'formview' => $form->createView(),
+                'rides' => $query,
+            ]);
+        }
+
+        // If the information comes from home page : filter applied
+        if (isset($departureCity) && isset($arrivalCity) && isset($departureDate)) {
+            $query = $em->createQueryBuilder()
+                ->select('r.id, r.whereTo, r.whereFrom, r.departure_time, u.nickname, c.brand_name')
+                ->from(Ride::class, 'r')
+                ->join('r.car', 'c')
+                ->join('c.driver', 'u')
+                ->where('r.whereFrom = :departureCity')
+                ->setParameter('departureCity', $departureCity)
+                ->andWhere('r.whereTo = :arrivalCity')
+                ->setParameter('arrivalCity', $arrivalCity)
+                ->andWhere('r.departure_time >= :departureDate')
+                ->setParameter('departureDate', $departureDate)
+                ->getQuery()
+                ->getResult();
+
+            // If no filter is applied, get all rides
+            // Using DQL to fetch all rides with their associated car and driver
+        } else {
+            $query = $em->createQuery('SELECT r.id, r.whereTo, r.whereFrom, r.departure_time, u.nickname, c.brand_name FROM App\Entity\Ride r JOIN r.car c JOIN c.driver u');
+            $query = $query->getResult();
+        }
 
         return $this->render('ride/list.html.twig', [
-            'rides' => $rides,
+            'formview' => $form->createView(),
+            'rides' => $query,
         ]);
     }
 
